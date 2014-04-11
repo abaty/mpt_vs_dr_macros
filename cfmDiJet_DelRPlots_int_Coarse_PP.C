@@ -1,3 +1,4 @@
+// may have to remove stuff for plotting pp since i accidently edited that into wrong file
 #include "TStyle.h"
 #include "gammaJetAnalysis/gammaJetAnalysis/commonUtility.h"
 #include "TTree.h"
@@ -8,6 +9,7 @@
 #include "TCanvas.h"
 #include "TCut.h"
 #include "TProfile.h"
+#include "TMath.h"
 
 TFile* inFile1_p = 0;
 TTree* inTree_p = 0;
@@ -22,37 +24,53 @@ const char* fileTag1;
 
 //shorthands, w/ _CFMSKIM.h                                                                                                                      
 
-const char* Di80a = "Pythia80_HydjetDrum_mix01_HiForest2_v20_CFMSKIM.root";
+const char* Pythia80_QG = "pt80_pp2013_P01_prod22_v81_merged_forest_0_CFMSKIM_20140403_QG.root";
 
-const char* Di80b = "Dijet80_HydjetDrum_v27_mergedV1_CFMSKIM.root";
+const char* PPData_UP = "PP_Data_JetCutUp.root";
 
-const char* Di80c = "HydjetDrum_Pyquen_Dijet80_Embedded_d20140122_Track7_v2_CFMSKIM.root";
+const char* PPData_DOWN = "PP_Data_JetCutDown.root";
 
-const char* Di80d = "HiForest_Pythia_Hydjet_Jet80_Track8_Jet6_STARTHI53_LV1_merged_forest_0_CFMSKIM.root";                            
+const char* Pythia80 = "Pythia80.root";
 
-const char* Di80e = "HiForest_Pythia_Hydjet_Jet80_Track8_Jet14_STARTHI53_LV1_merged_forest_0_CFMSKIM.root";
+const char* Di80a = "Pythiat2_v20_CFMSKIM.root";
 
-const char* Di80f = "HiForest_Pythia_Hydjet_Jet80_Track8_Jet19_STARTHI53_LV1_merged_forest_0_50k_CFMSKIM.root";
+const char* Di80b = "Dije_v27_mergedV1_CFMSKIM.root";
 
-const char* Di80g = "HiForest_Pythia_Hydjet_Jet80_Track8_Jet19_STARTHI53_LV1_merged_forest_0_300k_CFMSKIM.root";
+const char* Di80c = "Hydjet80_Embedded_d20140122_Track7_v2_CFMSKIM.root";
 
-const char* Di80h = "HiForest_Pythia_Hydjet_Jet80_Track8_Jet21_STARTHI53_LV1_merged_forest_0_300k_CFMSKIM.root";
+const char* Di80d = "HiForest_Pytack8_Jet6_STARTHI53_LV1_merged_forest_0_CFMSKIM.root";                            
 
-const char* Di100a = "Dijet100_HydjetDrum_v27_mergedV1_CFMSKIM.root";
+const char* Di80e = "HiForest_Prack8_Jet14_STARTHI53_LV1_merged_forest_0_CFMSKIM.root";
 
-const char* EmDi80a = "PbPb_pythiaHYDJET_forest_EmEnrichedDijet80_CFMSKIM.root";
+const char* Di80f = "HiForest_Pk8_Jet19_STARTHI53_LV1_merged_forest_0_50k_CFMSKIM.root";
 
-const char* DataA = "Track8_Jet17_GR_R_53_LV6_SUB_0_CFMSKIM.root";
+const char* Di80g = "HiForest8_Jet19_STARTHI53_LV1_merged_forest_0_300k_CFMSKIM.root";
 
-const char* DataB = "hiForest_Jet80or95_GR_R_53_LV6_02Mar2014_1300CET_Track8_Jet15_0_1200k_CFMSKIM.root";
+const char* Di80h = "HiForesJet21_STARTHI53_LV1_merged_forest_0_300k_CFMSKIM.root";
 
-const char* DataC = "hiForest_Jet80or95_GR_R_53_LV6_08Mar2014_0300CET_Track8_Jet21_0_700k_CFMSKIM.root";
+const char* Di100a = "Dm_v27_mergedV1_CFMSKIM.root";
 
-const char* DataD = "hiForest_Jet80or95_GR_R_53_LV6_12Mar2014_0000CET_Track8_Jet21_0_1200k_CFMSKIM.root";
+const char* EmDi80a = "PbPbdDijet80_CFMSKIM.root";
 
-const char* DataE = "HydjetDrum_Pyquen_Dijet100_Embedded_FOREST_STARTHI53_LV1_Track8_Jet21_290k_v0_merged_0_CFMSKIM_20140322_0.root";
+const char* DataA = "Tra3_LV6_SUB_0_CFMSKIM.root";
 
-const char* DataF = "HydjetDrum_Pyquen_Dijet120_Embedded_FOREST_STARTHI53_LV1_Track8_Jet21_290k_v0_merged_0_CFMSKIM_20140322_0.root";
+const char* DataB = "hiF_53_LV6_02Mar2014_1300CET_Track8_Jet15_0_1200k_CFMSKIM.root";
+
+const char* DataC = "hiFor_LV6_08Mar2014_0300CET_Track8_Jet21_0_700k_CFMSKIM.root";
+
+const char* DataD = "hiForR_R_53_LV6_12Mar2014_0000CET_Track8_Jet21_0_1200k_CFMSKIM.root";
+
+const char* DataE = "Hydjet_FOREST_STARTHI53_LV1_Track8_Jet21_290k_v0_merged_0_CFMSKIM_20140322_0.root";
+
+const char* DataF = "Hd_FOREST_STARTHI53_LV1_Track8_Jet21_290k_v0_merged_0_CFMSKIM_20140322_0.root";
+
+const char* DataG = "HiFot21_STARTHI53_LV1_merged_forest_0_300k_CFMSKIM_avgaxis.root";
+
+const char* DataH = "hiFores2Mar2014_000CET_Track8_Jet21_0_1200k.root";
+
+const char* DataI = "Hydjbedded_FOREST_STARTHI53_LV1_Track8_Jet24_290k_v0_merged_0_CFMSKIM_20140322_0.root";
+
+const char* DataPP= "pp_Data.root";
 
 Float_t getDPHI( Float_t phi1, Float_t phi2) {
   Float_t dphi = phi1 - phi2;
@@ -217,7 +235,7 @@ TCut makeDelPhiCut(Int_t setNum, Float_t delPhiLow = 2*TMath::Pi()/3)
 }
 
 
-void makeImbDelRGraph(TTree* getTree_p, const char* outName, const char* gorr, Int_t setNum, const char* perpProj, const char* FPT, Int_t centLow, Int_t centHi, Int_t graphLow, Int_t graphHi, const char* GLN = "N", const char* Corr = "")
+void makeImbDelRGraph(TTree* getTree_p, const char* outName, const char* gorr, Int_t setNum, const char* perpProj, const char* FPT, Int_t graphLow, Int_t graphHi, const char* GLN = "N", const char* Corr = "")
 {
   inFile1_p->cd();
 
@@ -225,7 +243,7 @@ void makeImbDelRGraph(TTree* getTree_p, const char* outName, const char* gorr, I
   if(strcmp("", Corr) != 0)
     setCorrNum = setNum + 5;
 
-  const char* title = Form("%s%sImbDelR%s%s%s_%d%d_%s_%s_g", gorr, algType[setNum], perpProj, FPT, Corr, (Int_t)(centLow*.5), (Int_t)((centHi + 1)*.5), GLN, fileTag1);
+  const char* title = Form("%s%sImbDelR%s%s%s_%s_%s_g", gorr, algType[setNum], perpProj, FPT, Corr, GLN, fileTag1);
 
   //const char* title_integrated = Form("%s%sImbDelR%s%s%s_%d%d_%s_%s_integrated_g", gorr, algType[setNum], perpProj, FPT, Corr, (Int_t)(centLow*.5), (Int_t)((centHi + 1)*.5), GLN, fileTag1);
 
@@ -242,28 +260,41 @@ void makeImbDelRGraph(TTree* getTree_p, const char* outName, const char* gorr, I
   const char* coneR[10] = {"1C", "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "10C"};
 
   TCut setCut = makeSetCut(setNum);
-  TCut centCut = makeCentCut(centLow, centHi);
+  //TCut centCut = makeCentCut(centLow, centHi);
   TCut etaCut = makeEtaCut(setNum, 0.5, GLN);
-  TCut phiCut = makeDelPhiCut(setNum,19*TMath::Pi()/20.0);
+  TCut phiCut = makeDelPhiCut(setNum,5*TMath::Pi()/6.0);
+  TCut assymCut = makeAsymmCut(setNum,0,1);
   TCut jetLCut = Form("AlgLeadJtPt[%d] > 120", setNum);
+  TCut gluonCut = Form("isGluonJet[%d]",setNum);
+  TCut quarkCut = Form("isQuarkJet[%d]",setNum);
 
   const char* name1[10] = {"1C(10000, -10000, 10000)", "2C(10000, -10000, 10000)", "3C(10000, -10000, 10000)", "4C(10000, -10000, 10000)", "5C(10000, -10000, 10000)", "6C(10000, -10000, 10000)", "7C(10000, -10000, 10000)", "8C(10000, -10000, 10000)", "9C(10000, -10000, 10000)", "10C(10000, -10000, 10000)"};
 
   Float_t point[10] = {.1, .3, .5, .7, .9, 1.1, 1.3, 1.5, 1.7, 1.9};
   Float_t xErr[10] = {.1, .1, .1, .1, .1, .1, .1, .1, .1, .1};
-  Float_t netimb=0; 
-  Float_t netimberr=0; 
+  Float_t netimb=0.0; 
+  Float_t netimberr=0.0; 
 
   for(Int_t binIter = 0; binIter < 10; binIter++){
     TString var = Form("%sAlgImb%s%s%s[%d]", gorr, perpProj, coneR[binIter], FPT, setCorrNum);
-    getTree_p->Project(name1[binIter], var, setCut && centCut && etaCut && phiCut && jetLCut);
+    getTree_p->Project(name1[binIter], var, setCut && etaCut && phiCut && jetLCut && assymCut);
 
     getHist_p = (TH1F*)inFile1_p->Get(coneR[binIter]);
-    //netimb += getHist_p->GetMean();
+   // netimb += getHist_p->GetMean();
+    //netimberr += TMath::Power(getHist_p->GetMeanError(),2);
     //netimberr += getHist_p->GetMeanError();
 
-    imbDelRGraph_p->SetPoint(binIter, point[binIter], getHist_p->GetMean());
-    imbDelRGraph_p->SetPointError(binIter, xErr[binIter], getHist_p->GetMeanError());
+    //imbDelRGraph_p->SetPoint(binIter, point[binIter], getHist_p->GetMean());
+    //imbDelRGraph_p->SetPointError(binIter, xErr[binIter], getHist_p->GetMeanError());
+    //if(strcmp(FPT,"F") == 0){
+     // imbDelRGraph_p->SetPoint(binIter, point[binIter], netimb);
+      //imbDelRGraph_p->SetPointError(binIter, xErr[binIter], TMath::Power(netimberr,0.5));
+   // }
+    //else{
+      imbDelRGraph_p->SetPoint(binIter, point[binIter], getHist_p->GetMean());
+      imbDelRGraph_p->SetPointError(binIter, xErr[binIter], getHist_p->GetMeanError());
+    //}
+    //imbDelRGraph_p->SetPointError(binIter, xErr[binIter], netimberr);
 
     //netimbDelRGraph_p->SetPoint(binIter, point[binIter], netimb);
     //netimbDelRGraph_p->SetPoint(binIter, point[binIter], netimberr);
@@ -307,8 +338,36 @@ Double_t sumYForPTStack(Double_t dIn = 0, Double_t comp1 = 0, Double_t comp2 = 0
 }
 
 
+/*void makeHistForPP(TGraph* gF_p, TH1F* hF_p, Int_t pos = 4)
+{
+  Int_t points = 10;
+  Double_t xF[points];
+  Double_t yF[points];
 
-void makeHistForPtStack(TGraph* g0_1_p, TGraph* g1_2_p, TGraph* g2_4_p, TGraph* g4_8_p, TGraph* g8_100_p, TGraph* gF_p, TH1F* h0_1_p, TH1F* h1_2_p, TH1F* h2_4_p, TH1F* h4_8_p, TH1F* h8_100_p, TH1F* hF_p, Int_t pos = 4, const char* perpProj = "Proj")
+  for(Int_t iter = 0; iter < points; iter++){
+    gF_p->GetPoint(iter, xF[iter], yF[iter]);
+    hF_p->SetBinContent(iter + 1, yF[iter]);
+    hF_p->SetBinError(iter + 1, gF_p->GetErrorY(iter));
+
+    if(iter == 7){
+      std::cout << std::endl;
+
+      std::cout << hF_p->GetBinContent(iter+1) << std::endl;
+
+      std::cout << std::endl;
+    }
+  }
+  hF_p->SetXTitle(Form("#Delta R"));
+
+  if(pos == 1){
+    hF_p->SetYTitle("<#slash{p}_{T}^{||}> (GeV/c)");
+  }
+  return;
+
+}*/
+
+void makeHistForPtStack(TGraph* g0_1_p, TGraph* g1_2_p, TGraph* g2_4_p, TGraph* g4_8_p, TGraph* g8_100_p, TGraph* gF_p, TH1F* h0_1_p, TH1F* h1_2_p, TH1F* h2_4_p, TH1F* h4_8_p, TH1F* h8_100_p, TH1F* hF_p, Int_t pos = 4)
+
 {
   Int_t points = 10;
 
@@ -400,54 +459,53 @@ void drawHistToPTStack(TH1F* drawHist_p, Int_t color, const char* drawOpt)
 
 void makeImbDelRPtStack(const char* fileName, const char* gorr, Int_t setNum, const char* perpProj, const char* GLN, const char* Corr = "")
 {
+  //TFile * ppfile = new TFile("plots/pp_Data.root","read");
   TFile* panelFile_p = new TFile(fileName, "UPDATE");
 
   TGraphErrors* getGraph1_p[6];
   TGraphErrors* getGraph2_p[6];
-  TGraphErrors* getGraph3_p[6];
-  TGraphErrors* getGraph4_p[6];
-
-  TH1F* hist1_p[6];
-  TH1F* hist2_p[6];
-  TH1F* hist3_p[6];
-  TH1F* hist4_p[6];
+  //TGraphErrors* getGraph_pp_p = (TGraphErrors*)ppfile->Get("rVsCaloImbDelRProjAFCorr_N_DataPP_g");
 
   Float_t binArrayX[11] = {.00, .20, .40, .60, .80, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0};
 
-  const char* namePTL[6] = {"0", "1", "2", "4", "8", "F"};
-  const char* namePTR[6] = {"_1", "_2", "_4", "_8", "_100", ""};
+  TH1F* hist1_p[6];
+  TH1F* hist2_p[6];
+  //TH1F* hist_pp_p[1];
+  //hist_pp_p[0] = new TH1F("pp","pp",10,binArrayX);
+  //niceTH1(hist_pp_p[0], 60, -60, 505,406);
+
+  //makeHistForPP(getGraph_pp_p,hist_pp_p[0],1);
+
+  const char* namePT[6] = {"0_1", "1_2", "2_4", "4_8", "8_100", "F"};
 
   for(Int_t histIter = 0; histIter < 6; histIter++){
-    hist1_p[histIter] = new TH1F(Form("hist1%s%s_p", namePTL[histIter], namePTR[histIter]), Form("hist1%s%s_p", namePTL[histIter], namePTR[histIter]), 10, binArrayX);
-    hist2_p[histIter] = new TH1F(Form("hist2%s%s_p", namePTL[histIter], namePTR[histIter]), Form("hist2%s%s_p", namePTL[histIter], namePTR[histIter]), 10, binArrayX);
+    hist1_p[histIter] = new TH1F(Form("hist1%s_p", namePT[histIter]), Form("hist1%s_p", namePT[histIter]), 10, binArrayX);
+    hist2_p[histIter] = new TH1F(Form("hist2%s_p", namePT[histIter]), Form("hist2%s_p", namePT[histIter]), 10, binArrayX);
 
-    hist3_p[histIter] = new TH1F(Form("hist3%s%s_p", namePTL[histIter], namePTR[histIter]), Form("hist3%s%s_p", namePTL[histIter], namePTR[histIter]), 10, binArrayX);
-    hist4_p[histIter] = new TH1F(Form("hist4%s%s_p", namePTL[histIter], namePTR[histIter]), Form("hist4%s%s_p", namePTL[histIter], namePTR[histIter]), 10, binArrayX);
-    
+    niceTH1(hist1_p[histIter], 60, -60, 505, 406);
+    niceTH1(hist2_p[histIter], 60, -60, 505, 406);
 
-    niceTH1(hist1_p[histIter], 10, -10, 505, 406);
-    niceTH1(hist2_p[histIter], 10, -10, 505, 406);
-    niceTH1(hist3_p[histIter], 10, -10, 505, 406);
-    niceTH1(hist4_p[histIter], 10, -10, 505, 406);
-
-    getGraph1_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s%s_50100_%s_%s_g", gorr, algType[setNum], perpProj, namePTL[histIter], namePTR[histIter], Corr, GLN, fileTag1));
-    getGraph2_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s%s_3050_%s_%s_g", gorr, algType[setNum], perpProj, namePTL[histIter], namePTR[histIter], Corr, GLN, fileTag1));
-    getGraph3_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s%s_1030_%s_%s_g", gorr, algType[setNum], perpProj, namePTL[histIter], namePTR[histIter], Corr, GLN, fileTag1));
-    getGraph4_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s%s_010_%s_%s_g", gorr, algType[setNum], perpProj, namePTL[histIter], namePTR[histIter], Corr, GLN, fileTag1));
+    getGraph1_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s_%s_%s_g", gorr, algType[setNum], perpProj, namePT[histIter], Corr, GLN, fileTag1));
+    getGraph2_p[histIter] = (TGraphErrors*)panelFile_p->Get(Form("%s%sImbDelR%s%s%s_%s_%s_g", gorr, algType[setNum], perpProj, namePT[histIter], Corr, GLN, fileTag1));
   }
 
   makeHistForPtStack(getGraph1_p[0], getGraph1_p[1], getGraph1_p[2], getGraph1_p[3], getGraph1_p[4], getGraph1_p[5], hist1_p[0], hist1_p[1], hist1_p[2], hist1_p[3], hist1_p[4], hist1_p[5], 1);
 
   TCanvas* profPanel_p;
-  profPanel_p = new TCanvas(Form("%s%sImbDelR%s%sPTStack_%s_%s_c", gorr, algType[setNum], perpProj, Corr, GLN, fileTag1), Form("%s%sImbDelR%s%sPTStack_%s_%s_c", gorr, algType[setNum], perpProj, Corr, GLN, fileTag1), 1400, 500);
-  profPanel_p->Divide(4, 1, 0, 0);
+  profPanel_p = new TCanvas(Form("%s%sImbDelR%s%sPTStack_%s_%s_c", gorr, algType[setNum], perpProj, Corr, GLN, fileTag1), Form("%s%sImbDelR%s%sPTStack_%s_%s_c", gorr, algType[setNum], perpProj, Corr, GLN, fileTag1), 700, 500);
+  profPanel_p->Divide(2, 1, 0, 0);
 
   TLegend* leg;
   if(strcmp(gorr, "g") == 0)
-    leg = new TLegend(0.15, 0.75, 0.95, 0.95, Form("Truth #slash{p}_{T}^{||} v. %s #Delta R, %s", algType[setNum], fileTag1));
+    //leg = new TLegend(0.15, 0.75, 0.95, 0.95, Form("Truth #slash{p}_{T}^{||} v. %s #Delta R, %s, A_{J}>0.22", algType[setNum], fileTag1));
+  //else
+    //leg = new TLegend(0.15, 0.75, 0.95, 0.95, Form("%sTrk #slash{p}_{T}^{||} v. %s #Delta R, %s, A_{J}>0.22", Corr, algType[setNum], fileTag1));
+
+leg = new TLegend(0.15, 0.75, 0.95, 0.95, Form("Truth #slash{p}_{T}^{||} v. %s #Delta R, %s", algType[setNum], fileTag1));
   else
     leg = new TLegend(0.15, 0.75, 0.95, 0.95, Form("%sTrk #slash{p}_{T}^{||} v. %s #Delta R, %s", Corr, algType[setNum], fileTag1));
-   
+
+
   leg->SetFillColor(0);
   leg->SetTextFont(42);
   leg->SetTextSize(.04);
@@ -467,6 +525,7 @@ void makeImbDelRPtStack(const char* fileName, const char* gorr, Int_t setNum, co
   leg->AddEntry(hist1_p[4], "8 < p_{T}", "F");
 
   hist1_p[5]->Draw("SAME E1");
+  //hist_pp_p[0]->Draw("SAME E1");
   leg->Draw("SAME");
 
   TLine* zeroLine_p = new TLine(0., 0., 2.0, 0.);
@@ -476,7 +535,7 @@ void makeImbDelRPtStack(const char* fileName, const char* gorr, Int_t setNum, co
 
   TLatex* label_p = new TLatex();
   label_p->SetNDC();
-  label_p->DrawLatex(.2, .3, "50-100%");
+  label_p->DrawLatex(.2, .3, "30-100%");
   
   profPanel_p->cd(2);
 
@@ -489,49 +548,32 @@ void makeImbDelRPtStack(const char* fileName, const char* gorr, Int_t setNum, co
   drawHistToPTStack(hist2_p[4], kRed + 1, "E1 HIST SAME");
 
   hist2_p[5]->Draw("SAME E1");
+  //hist_pp_p[0]->SetMarkerStyle(25);
+  //hist_pp_p[0]->SetMarkerColor(kRed);
+  //hist_pp_p[0]->Draw("SAME E1");
 
   zeroLine_p->Draw();
 
-  label_p->DrawLatex(.2, .3, "30-50%");
-
+  label_p->DrawLatex(.2, .3, "0-30%");
 
   label_p->DrawLatex(.1, .92, Form("%s Lead Jet p_{T} > 120 GeV/c", algType[setNum]));
   label_p->DrawLatex(.1, .88, Form("%s Sublead Jet p_{T} > 50 GeV/c", algType[setNum]));
-  label_p->DrawLatex(.1, .84, Form("%s Jet #Delta #phi > 19#pi/20", algType[setNum]));
-  label_p->DrawLatex(.1, .80, Form("%s Lead/Sublead Jet abs(#eta) < 0.5", algType[setNum]));
-
-  profPanel_p->cd(3);
-
-  makeHistForPtStack(getGraph3_p[0], getGraph3_p[1], getGraph3_p[2], getGraph3_p[3], getGraph3_p[4], getGraph3_p[5], hist3_p[0], hist3_p[1], hist3_p[2], hist3_p[3], hist3_p[4], hist3_p[5], 3);
-
-  drawHistToPTStack(hist3_p[0], kBlue - 9, "E1 HIST");
-  drawHistToPTStack(hist3_p[1], kYellow - 9, "E1 HIST SAME");
-  drawHistToPTStack(hist3_p[2], kOrange + 1, "E1 HIST SAME");
-  drawHistToPTStack(hist3_p[3], kGreen + 3, "E1 HIST SAME");
-  drawHistToPTStack(hist3_p[4], kRed + 1, "E1 HIST SAME");
-
-  hist3_p[5]->Draw("SAME E1");
-
-  zeroLine_p->Draw();
-
-  label_p->DrawLatex(.2, .3, "10-30%");
-  profPanel_p->cd(4);
-
-  makeHistForPtStack(getGraph4_p[0], getGraph4_p[1], getGraph4_p[2], getGraph4_p[3], getGraph4_p[4], getGraph4_p[5], hist4_p[0], hist4_p[1], hist4_p[2], hist4_p[3], hist4_p[4], hist4_p[5], 4);
-
-  drawHistToPTStack(hist4_p[0], kBlue - 9, "E1 HIST");
-  drawHistToPTStack(hist4_p[1], kYellow - 9, "E1 HIST SAME");
-  drawHistToPTStack(hist4_p[2], kOrange + 1, "E1 HIST SAME");
-  drawHistToPTStack(hist4_p[3], kGreen + 3, "E1 HIST SAME");
-  drawHistToPTStack(hist4_p[4], kRed + 1, "E1 HIST SAME");
-
-  hist4_p[5]->Draw("SAME E1");
-
-  zeroLine_p->Draw();
-
-  label_p->DrawLatex(.2, .3, "0-10%");
+  label_p->DrawLatex(.1, .84, Form("%s Jet #Delta #phi > 5#pi/6", algType[setNum]));
+  label_p->DrawLatex(.1, .80, Form("%s Lead/Sublead Jet abs(#eta) < .5", algType[setNum]));
 
   profPanel_p->Write();
+
+    std::cout << "1" << std::endl;
+  //if(strcmp(gorr,"g")==0 && strcmp(algType[setNum],"T")==0){
+    //std::cout << "1" << std::endl;
+     //hist1_p[5]->SetName("gen_gen_integrated");
+     //hist1_p[5]->Write();
+ // }
+  //if(strcmp(gorr,"r")==0 && strcmp(algType[setNum],"VsCalo")==0){
+   //  std::cout << "2" << std::endl;
+    // hist1_p[5]->SetName("reco_reco_integrated");
+     //hist1_p[5]->Write();
+ // }
 
   claverCanvasSaving(profPanel_p, Form("../pngDir/%s%sImbDelR%s%sPTStack_%s_%s", gorr, algType[setNum], perpProj, Corr, GLN, fileTag1), "png");
 
@@ -542,15 +584,14 @@ void makeImbDelRPtStack(const char* fileName, const char* gorr, Int_t setNum, co
   for(Int_t histIter = 0; histIter < 6; histIter++){
     delete hist1_p[histIter];
     delete hist2_p[histIter];
-    delete hist3_p[histIter];
-    delete hist4_p[histIter];
   }
 
   panelFile_p->Close();
+  //ppfile->Close();
   delete panelFile_p;
 }
 
-void cfmDiJet_DelRPlots(const char* inName, const char* outName, Bool_t montecarlo = false)
+void cfmDiJet_DelRPlots_int(const char* inName, const char* outName, Bool_t montecarlo = false)
 {
   TH1::SetDefaultSumw2();
 
@@ -618,6 +659,39 @@ void cfmDiJet_DelRPlots(const char* inName, const char* outName, Bool_t montecar
     std::cout << DataF << std::endl;
     fileTag1 = "DataF";
   }
+   else if(!strcmp(inName, DataG)){
+    std::cout << DataG << std::endl;
+    fileTag1 = "DataG";
+  }
+   else if(!strcmp(inName, DataH)){
+    std::cout << DataH << std::endl;
+    fileTag1 = "DataH";
+  }
+ else if(!strcmp(inName, DataI)){
+    std::cout << DataI << std::endl;
+    fileTag1 = "DataI";
+  }
+   else if(!strcmp(inName, DataPP)){
+    std::cout << DataPP << std::endl;
+    fileTag1 = "DataPP";
+  }
+ else if(!strcmp(inName, Pythia80)){
+    std::cout << Pythia80 << std::endl;
+    fileTag1 = "Pythia80";
+  }
+ else if(!strcmp(inName, PPData_UP)){
+    std::cout << PPData_UP << std::endl;
+    fileTag1 = "PPData_UP";
+  }
+ else if(!strcmp(inName, PPData_DOWN)){
+    std::cout << PPData_DOWN << std::endl;
+    fileTag1 = "PPData_DOWN";
+  }
+ else if(!strcmp(inName, Pythia80_QG)){
+    std::cout << Pythia80_QG << std::endl;
+    fileTag1 = "Pythia80_QG";
+  }
+
 
   std::cout << "Filetag1 is: " << fileTag1 << std::endl;
 
@@ -636,30 +710,39 @@ void cfmDiJet_DelRPlots(const char* inName, const char* outName, Bool_t montecar
   const char* corr[1]={"Corr"};
   const char* ptBins[5] = {"0_1", "1_2", "2_4", "4_8", "8_100"};
 
-  Int_t centLow[4] = {0, 20, 60, 100};
-  Int_t centHi[4] = {19, 59, 99, 199};
+  //  Int_t centLow[4] = {0, 20, 60, 100};
+  //  Int_t centHi[4] = {19, 59, 99, 199};
+
+  Int_t centLow[2] = {0, 60};
+  Int_t centHi[2] = {59, 199};
+
+
 
   for(Int_t algIter = 0; algIter < jetAlgMax; algIter++){
     if(algIter != 3 && algIter !=4) continue;
 
     for(Int_t corrIter = 0; corrIter < 1; corrIter++){
-      for(Int_t centIter = 0; centIter < 4; centIter++){
-	makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", "F", centLow[centIter], centHi[centIter], -10, 10, "N", corr[corrIter]);
+      for(Int_t centIter = 0; centIter < 2; centIter++){
+	makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", "F", -10, 10, "N", corr[corrIter]);
+        makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", "F", -10, 10, "N", "");
 
-	if(montecarlo)
-	  makeImbDelRGraph(inTree_p, outName, "g", algIter, "ProjA", "F", centLow[centIter], centHi[centIter], -10, 10, "N", "");
-      
+	if(montecarlo)      
+	  makeImbDelRGraph(inTree_p, outName, "g", algIter, "ProjA", "F", -10, 10, "N", "");
+
 	for(Int_t ptBinIter = 0; ptBinIter < 5; ptBinIter++){
-	  makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", ptBins[ptBinIter], centLow[centIter], centHi[centIter], -10, 10, "N", corr[corrIter]);
+	  makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", ptBins[ptBinIter], -10, 10, "N", corr[corrIter]);
+          makeImbDelRGraph(inTree_p, outName, "r", algIter, "ProjA", ptBins[ptBinIter], -10, 10, "N", "");
 
 	  if(montecarlo)
-	    makeImbDelRGraph(inTree_p, outName, "g", algIter, "ProjA", ptBins[ptBinIter], centLow[centIter], centHi[centIter], -10, 10, "N", "");
+	    makeImbDelRGraph(inTree_p, outName, "g", algIter, "ProjA", ptBins[ptBinIter], -10, 10, "N", "");
+
 	}
       }
     }
 
     // makeImbDelRPtStack(outName, "r", algIter, "ProjA", "N");
     makeImbDelRPtStack(outName, "r", algIter, "ProjA", "N", "Corr");
+    //makeImbDelRPtStack(outName, "r", algIter, "ProjA", "N", "");
 
     if(montecarlo)
       makeImbDelRPtStack(outName, "g", algIter, "ProjA", "N", "");
